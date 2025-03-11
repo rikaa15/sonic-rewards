@@ -48,6 +48,15 @@ df = pd.DataFrame(ALL_TRANSACTIONS)
 df["value"] = df["value"].astype(float) * 10**-18
 
 # Save to CSV
-df.to_csv("filtered_transactions.csv", index=False)
+df.to_csv("filtered_transactions_all.csv", index=False)
 
 print("All transactions saved to filtered_transactions.csv")
+
+df["value"] = pd.to_numeric(df["value"], errors='coerce')
+
+# Group by recipient address and sum the received tokens
+top_recipient = df.groupby("to")["value"].sum().sort_values(ascending=False)
+
+# Print top 10 recipients
+print("Top 10 recipients:")
+print(top_recipient.head(10))
