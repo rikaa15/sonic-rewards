@@ -1,3 +1,6 @@
+# Top profiters, rebalance frequency, and APR
+This repo will calculate top profiting wallets, their rebalance frequency, and APR for wS-USDC.e pool on Shadow exchange. If analyzing for other pools, you can just adjust the addresses and token parameters.
+
 ## Fetching Transactions and Obtaining Top Wallets from Sonicscan
 
 Sonicscan imposes limits on transaction retrieval:  
