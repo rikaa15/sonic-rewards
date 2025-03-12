@@ -48,4 +48,6 @@ Liquidity Duration: 27.54 days
 APR: 114.61%
 ```
 
-
+## In-progress:
+ - make gitignore and remove csv files
+ - collate all APR+rebalance programs to one unified program
