@@ -19,7 +19,30 @@ To bypass these limitations, the following code fetches transactions in adjusted
   - Reward values in JSON are converted from **Wei to Ether**.  
   - Transactions are saved to a `.csv` file upon execution.
 
-### 2. `analyze-transactions.py`
-- Fetches the **top wallets** (default: **10**) based on the **sum of rewards** calculated from the `.csv` file.  
+## Fetching Rebalance Frequnecy and APR from a wallet address
+
+### 1. `user-rewards.py`
+Add your sonicscan API key to `API_KEY`. Run `python3 user-rewards.py` and input wallet you want to analyze for in user prompt. This will output a csv file of all transactions of incentives distribution with the filename `"rewards_{user_address}.csv"` as well as an output of incentives recieved.
+
+### 2. `user-liquidity.py`
+Add your sonicscan API key to `API_KEY`. Run `python3 user-liquidity.py` and input wallet you want to analyze for in user prompt. This will output a csv file of all liquidity transactions with the filename `"liquidity_{user_address}.csv"` as well as an output of net liquidity provided.
+
+### 3. `rebalance_apr.py`
+Add your coingecko "DEMO" API key to `"x-cg-demo-api-key"` (if PRO key, change header and endpoint accordingly.) Input wallet address to analyze for and the stats output from the past 2 programs (`user-rewards.py` and `user-liquidity.py`). This will output stats like this:
+```
+=== Rebalance Frequency Statistics ===
+Total Rebalance Events: 20
+Average Interval: 452763.75 seconds (~125.77 hours)
+Median Interval: 341686.50 seconds (~94.91 hours)
+Minimum Interval: 93.00 seconds
+Maximum Interval: 1124685.00 seconds (~312.41 hours)
+Rebalance Frequency per Day: 1.12 rebalances/day
+
+=== Liquidity & APR Calculation ===
+Total Added Liquidity (USD): $274863.72
+Total Rewards Earned (USD): $23765.58
+Liquidity Duration: 27.54 days
+APR: 114.61%
+```
 
 
