@@ -19,7 +19,7 @@ To bypass these limitations, the following code fetches transactions in adjusted
   - Reward values in JSON are converted from **Wei to Ether**.  
   - Transactions are saved to a `.csv` file upon execution.
 
-## Fetching Rebalance Frequnecy and APR from a wallet address
+## Fetching Rebalance Frequecny and APR from a wallet address
 
 ### 1. `user-rewards.py`
 Add your sonicscan API key to `API_KEY`. Run `python3 user-rewards.py` and input wallet you want to analyze for in user prompt. This will output a csv file of all transactions of incentives distribution with the filename `"rewards_{user_address}.csv"` as well as an output of incentives recieved.
