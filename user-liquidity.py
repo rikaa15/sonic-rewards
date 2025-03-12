@@ -44,18 +44,26 @@ def fetch_transactions(token_address, token_symbol):
 
             try:
                 response = requests.get(BASE_URL, params=params).json()
-                
-                # Check if response contains results
-                if "result" in response and response["result"]:
-                    # Add token name to distinguish the tokens
-                    print(response["result"])
-                    all_transactions.extend(response["result"])
-                    page += 1
+
+                # Ensure the response contains a valid result list
+                if "result" in response:
+                    if isinstance(response["result"], list):  # Check if it's a list
+                        all_transactions.extend(response["result"])
+                        page += 1
+
+                        if page * OFFSET >= 10000:
+                            print("Reached API limit for this block range. Moving to the next batch.")
+                            break
+                    else:
+                        print(f"Unexpected API response format: {response}")
+                        break
                 else:
+                    print(f"Invalid API response: {response}")
                     break
 
+
                 # Add a small delay to prevent hitting rate limits
-                time.sleep(1)
+                time.sleep(5)
 
             except requests.exceptions.RequestException as e:
                 print(f"Error fetching data: {e}")
@@ -105,26 +113,3 @@ usdce_transfers = df_filtered[df_filtered["tokenSymbol"] == "USDC.e"].apply(
 
 print(f"Total wS added liquidity: {ws_transfers:.6f}")
 print(f"Total USDC.e added liquidity: {usdce_transfers:.6f}")
-
-def calculate_rebalancing_frequency(df_filtered, time_period='D'):
-    # Extract the timestamps of the filtered transactions
-    rebalance_dates = pd.to_datetime(df_filtered["timeStamp"], unit='s')
-
-    # Create a DataFrame of rebalance timestamps
-    df_rebalance = pd.DataFrame(rebalance_dates, columns=["timestamp"])
-
-    # Set timestamp as the index and resample based on the time period (e.g., daily, weekly)
-    df_rebalance.set_index("timestamp", inplace=True)
-    df_resampled = df_rebalance.resample(time_period).count()
-
-    return df_resampled
-
-# Calculate rebalancing frequency for wS and USDC.e over time
-ws_rebalance_frequency = calculate_rebalancing_frequency(df_filtered[df_filtered["tokenSymbol"] == "wS"], time_period='D')  # Daily
-usdce_rebalance_frequency = calculate_rebalancing_frequency(df_filtered[df_filtered["tokenSymbol"] == "USDC.e"], time_period='D')  # Daily
-
-# Display the rebalancing frequency
-print(f"\nRebalancing frequency for wS (daily):")
-print(ws_rebalance_frequency)
-print(f"\nRebalancing frequency for USDC.e (daily):")
-print(usdce_rebalance_frequency)
