@@ -2,17 +2,17 @@ import requests
 import pandas as pd
 import time
 
-API_KEY = ""  # Replace with your API key
+API_KEY = "TJM1EBASMD1INUGY53EHHCE4TQJ92HNHV4"  # Replace with your API key
 USDCE_ADDRESS = "0x29219dd400f2Bf60E5a23d13Be72B486D4038894"  # USDC.e token
 WS_ADDRESS = "0x039e2fB66102314Ce7b64Ce5Ce3E5183bc94aD38"  # wS token
 POOL_ADDRESS = "0x324963c267C354c7660Ce8CA3F5f167E05649970"  # Pool address
 BASE_URL = "https://api.sonicscan.org/api"
-OFFSET = 1000 
+OFFSET = 100 
 ALL_TRANSACTIONS = []
 
 START_BLOCK = 0
 END_BLOCK = 99999999
-BLOCK_STEP = 500000 
+BLOCK_STEP = 100000
 
 # Prompt user for the recipient address to filter
 user_address = input("Enter the recipient address to filter transactions: ").strip().lower()
@@ -41,37 +41,39 @@ def fetch_transactions(token_address, token_symbol):
                 "sort": "asc",
                 "apikey": API_KEY
             }
+            headers = {"User-Agent": "Mozilla/5.0"}
 
             try:
-                response = requests.get(BASE_URL, params=params).json()
+                response = requests.get(BASE_URL, params=params, headers=headers).json()
 
-                # Ensure the response contains a valid result list
-                if "result" in response:
-                    if isinstance(response["result"], list):  # Check if it's a list
-                        all_transactions.extend(response["result"])
-                        page += 1
+                if "status" in response and response["status"] == "0":
+                    if "Max calls per sec rate limit reached" in response.get("message", ""):
+                        print("Rate limit reached. Sleeping for 10 seconds...")
+                        time.sleep(10)
+                        continue
 
-                        if page * OFFSET >= 10000:
-                            print("Reached API limit for this block range. Moving to the next batch.")
-                            break
+                if "result" in response and response["result"]:
+                    valid_transactions = [tx for tx in response["result"] if isinstance(tx, dict)]
+                    if valid_transactions:
+                        print(f"Fetched {len(valid_transactions)} transactions...")
+                        all_transactions.extend(valid_transactions)
                     else:
-                        print(f"Unexpected API response format: {response}")
-                        break
+                        print("No valid transactions found on this page.")
+                    page += 1
                 else:
-                    print(f"Invalid API response: {response}")
                     break
 
-
-                # Add a small delay to prevent hitting rate limits
                 time.sleep(5)
 
             except requests.exceptions.RequestException as e:
                 print(f"Error fetching data: {e}")
-                break
+                time.sleep(10)
+                continue
 
         current_start += BLOCK_STEP
 
     return all_transactions
+
 
 # Fetch transactions for both wS and USDC.e
 ws_transactions = fetch_transactions(WS_ADDRESS, "wS")
