@@ -36,7 +36,27 @@ To bypass these limitations, the following code fetches transactions in adjusted
     This will list all the transactions of the pertaining wallet address' increase/decrease liquidity to the pool.
   3. `stats_{wallet_address}.txt`
     This will list all the stats (amount of net liquidity provided, rewards recieved, rebalance frequency, and APR) of the pertaining wallet.
-
+    Sample output:
+    ```
+    Total wS added liquidity: 592996.803577
+    Total USDC.e added liquidity: 26918.002937
+    Total $SHADOW tokens received: 0.014721
+    Total $xSHADOW tokens received: 382.891756
+    
+    === Rebalance Frequency Statistics ===
+    Total Rebalance Events: 20
+    Average Interval: 452763.75 seconds (~125.77 hours)
+    Median Interval: 341686.50 seconds (~94.91 hours)
+    Minimum Interval: 93.00 seconds
+    Maximum Interval: 1124685.00 seconds (~312.41 hours)
+    Rebalance Frequency per Day: 1.12 rebalances/day
+    
+    === Liquidity & APR Calculation ===
+    Total Added Liquidity (USD): $294728.05
+    Total Rewards Earned (USD): $28231.69
+    Liquidity Duration: 28.67 days
+    APR: 121.93%
+  ```
 
 ## In-progress:
  - clean code
