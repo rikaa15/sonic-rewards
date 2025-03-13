@@ -9,11 +9,12 @@ Sonicscan imposes limits on transaction retrieval:
 
 To bypass these limitations, the following code fetches transactions in adjusted block increments.
 
-### 1. `fetch-transactions.py`
+### `top-wallets.py`
 - **Setup:**
   - Add your **Sonicscan API key**.
-  - Edit the **contract address** (ERC-20 token).
-  - Edit the **sender address** (rewards gauge).  
+  - If you want to use a different pool:
+    - Edit the **contract address** (ERC-20 token).
+    - Edit the **sender address** (rewards gauge).  
 
 - **Additional Resources:**  
   - A list of gauge addresses for pools can be found under the ["Shadow Exchange - Revenue"](https://dune.com/shadow_exchange/main) query.  
@@ -22,32 +23,20 @@ To bypass these limitations, the following code fetches transactions in adjusted
   - Reward values in JSON are converted from **Wei to Ether**.  
   - Transactions are saved to a `.csv` file upon execution.
 
-## Fetching Rebalance Frequecny and APR from a wallet address
+## Fetching Individual Wallet Stats (Rebalance, APR, transactions, etc)
+### `user-stats.py`
+- **Setup:**
+  - Add your API keys to `SONICSCAN_API_KEY` and `COINGECKO_API_KEY` (this is setup for coingecko demo API key. If PRO key, adjust accordingly.)
+  - Edit the addresses if you want to look at other pools or tokens.
 
-### 1. `user-rewards.py`
-Add your sonicscan API key to `API_KEY`. Run `python3 user-rewards.py` and input wallet you want to analyze for in user prompt. This will output a csv file of all transactions of incentives distribution with the filename `"rewards_{user_address}.csv"` as well as an output of incentives recieved.
+- Output:
+  1. `rewards_{wallet_address}.csv`
+    This will list all the transactions of rewards distributed to the pertaining wallet address.
+  2. `liquidity_{wallet_address}.csv`
+    This will list all the transactions of the pertaining wallet address' increase/decrease liquidity to the pool.
+  3. `stats_{wallet_address}.txt`
+    This will list all the stats (amount of net liquidity provided, rewards recieved, rebalance frequency, and APR) of the pertaining wallet.
 
-### 2. `user-liquidity.py`
-Add your sonicscan API key to `API_KEY`. Run `python3 user-liquidity.py` and input wallet you want to analyze for in user prompt. This will output a csv file of all liquidity transactions with the filename `"liquidity_{user_address}.csv"` as well as an output of net liquidity provided.
-
-### 3. `rebalance_apr.py`
-Add your coingecko "DEMO" API key to `"x-cg-demo-api-key"` (if PRO key, change header and endpoint accordingly.) Input wallet address to analyze for and the stats output from the past 2 programs (`user-rewards.py` and `user-liquidity.py`). This will output stats like this:
-```
-=== Rebalance Frequency Statistics ===
-Total Rebalance Events: 20
-Average Interval: 452763.75 seconds (~125.77 hours)
-Median Interval: 341686.50 seconds (~94.91 hours)
-Minimum Interval: 93.00 seconds
-Maximum Interval: 1124685.00 seconds (~312.41 hours)
-Rebalance Frequency per Day: 1.12 rebalances/day
-
-=== Liquidity & APR Calculation ===
-Total Added Liquidity (USD): $274863.72
-Total Rewards Earned (USD): $23765.58
-Liquidity Duration: 27.54 days
-APR: 114.61%
-```
 
 ## In-progress:
- - make gitignore and remove csv files
- - collate all APR+rebalance programs to one unified program
+ - clean code
