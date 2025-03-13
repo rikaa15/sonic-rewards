@@ -1,7 +1,7 @@
 import requests
 import pandas as pd
 
-API_KEY = "138N5EFMCDRZ7BUJTWIYJCIIUCAMVIUFWJ"  # Replace with your API key
+API_KEY = ""  # Replace with your API key
 CONTRACT_ADDRESS = "0x3333b97138D4b086720b5aE8A7844b1345a33333"
 SENDER_ADDRESS = "0x0ac98Ce57D24f77F48161D12157cb815Af469fc0"
 BASE_URL = "https://api.sonicscan.org/api"
